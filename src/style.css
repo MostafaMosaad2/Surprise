@@ -1,0 +1,58 @@
+:root {
+  --bg-top: #2a1020;
+  --bg-bottom: #120810;
+  --glow: rgba(255, 120, 160, 0.35);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100svh;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 42%, var(--glow), transparent 62%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+#app {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.emoji {
+  margin: 0;
+  font-size: clamp(8rem, 42vw, 18rem);
+  line-height: 1;
+  user-select: none;
+  animation: pulse 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.35));
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emoji {
+    animation: none;
+  }
+}
