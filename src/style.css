@@ -15,6 +15,7 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -51,8 +52,117 @@ body {
   }
 }
 
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.flyer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.35));
+}
+
+.creature {
+  display: block;
+  overflow: visible;
+}
+
+.flyer--tweety .creature {
+  width: clamp(72px, 12vw, 108px);
+  height: auto;
+}
+
+.flyer--butterfly .creature {
+  width: clamp(52px, 9vw, 78px);
+  height: auto;
+}
+
+.tweety-wing {
+  transform-box: fill-box;
+  animation: tweety-flap 0.18s ease-in-out infinite alternate;
+}
+
+.tweety-wing--back {
+  transform-origin: 90% 50%;
+}
+
+.tweety-wing--front {
+  transform-origin: 20% 50%;
+  animation-name: tweety-flap-front;
+}
+
+.tweety-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tweety-blink 4.8s ease-in-out infinite;
+}
+
+.bf-wing {
+  transform-box: fill-box;
+  animation: butterfly-flap 0.16s ease-in-out infinite alternate;
+}
+
+.bf-wing--left {
+  transform-origin: 100% 55%;
+}
+
+.bf-wing--right {
+  transform-origin: 0% 55%;
+  animation-delay: 0.02s;
+}
+
+@keyframes tweety-flap {
+  from {
+    transform: rotate(6deg);
+  }
+  to {
+    transform: rotate(-32deg);
+  }
+}
+
+@keyframes tweety-flap-front {
+  from {
+    transform: rotate(-8deg);
+  }
+  to {
+    transform: rotate(26deg);
+  }
+}
+
+@keyframes tweety-blink {
+  0%,
+  88%,
+  100% {
+    transform: scaleY(1);
+  }
+  92% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes butterfly-flap {
+  from {
+    transform: scaleX(1) rotate(-2deg);
+  }
+  to {
+    transform: scaleX(0.18) rotate(4deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .emoji {
+    animation: none;
+  }
+
+  .tweety-wing,
+  .tweety-eye,
+  .bf-wing {
     animation: none;
   }
 }
