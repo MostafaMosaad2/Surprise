@@ -44,30 +44,37 @@ const TWEETY_SVG = `
 </svg>
 `
 
-const BUTTERFLY_SVG = `
+type ButterflyPalette = {
+  id: string
+  wing0: string
+  wing1: string
+  wing2: string
+  spot: string
+  spot2: string
+  stroke: string
+}
+
+function butterflySvg(p: ButterflyPalette) {
+  return `
 <svg class="creature butterfly" viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bf-wing" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#93C5FD"/>
-      <stop offset="45%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#1E3A8A"/>
-    </linearGradient>
-    <linearGradient id="bf-wing-hi" x1="0.2" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#BFDBFE"/>
-      <stop offset="100%" stop-color="#3B82F6"/>
+    <linearGradient id="bf-wing-${p.id}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${p.wing0}"/>
+      <stop offset="45%" stop-color="${p.wing1}"/>
+      <stop offset="100%" stop-color="${p.wing2}"/>
     </linearGradient>
   </defs>
   <g class="bf-wing bf-wing--left">
-    <path fill="url(#bf-wing)" stroke="#172554" stroke-width="1.2"
+    <path fill="url(#bf-wing-${p.id})" stroke="${p.stroke}" stroke-width="1.2"
       d="M68 46 C 22 8, 2 22, 14 48 C 2 68, 26 86, 68 56 Z"/>
-    <ellipse cx="34" cy="38" rx="9" ry="7" fill="#DBEAFE" opacity="0.7"/>
-    <ellipse cx="30" cy="58" rx="6" ry="5" fill="#93C5FD" opacity="0.55"/>
+    <ellipse cx="34" cy="38" rx="9" ry="7" fill="${p.spot}" opacity="0.75"/>
+    <ellipse cx="30" cy="58" rx="6" ry="5" fill="${p.spot2}" opacity="0.55"/>
   </g>
   <g class="bf-wing bf-wing--right">
-    <path fill="url(#bf-wing)" stroke="#172554" stroke-width="1.2"
+    <path fill="url(#bf-wing-${p.id})" stroke="${p.stroke}" stroke-width="1.2"
       d="M72 46 C 118 8, 138 22, 126 48 C 138 68, 114 86, 72 56 Z"/>
-    <ellipse cx="106" cy="38" rx="9" ry="7" fill="#DBEAFE" opacity="0.7"/>
-    <ellipse cx="110" cy="58" rx="6" ry="5" fill="#93C5FD" opacity="0.55"/>
+    <ellipse cx="106" cy="38" rx="9" ry="7" fill="${p.spot}" opacity="0.75"/>
+    <ellipse cx="110" cy="58" rx="6" ry="5" fill="${p.spot2}" opacity="0.55"/>
   </g>
   <ellipse cx="70" cy="54" rx="4.2" ry="20" fill="#1C1917"/>
   <circle cx="70" cy="32" r="5.4" fill="#1C1917"/>
@@ -77,6 +84,37 @@ const BUTTERFLY_SVG = `
   <circle cx="88" cy="8" r="2.1" fill="#1C1917"/>
 </svg>
 `
+}
+
+const BUTTERFLIES: ButterflyPalette[] = [
+  {
+    id: 'blue',
+    wing0: '#93C5FD',
+    wing1: '#2563EB',
+    wing2: '#1E3A8A',
+    spot: '#DBEAFE',
+    spot2: '#93C5FD',
+    stroke: '#172554',
+  },
+  {
+    id: 'pink',
+    wing0: '#FBCFE8',
+    wing1: '#EC4899',
+    wing2: '#9D174D',
+    spot: '#FCE7F3',
+    spot2: '#F9A8D4',
+    stroke: '#831843',
+  },
+  {
+    id: 'purple',
+    wing0: '#E9D5FF',
+    wing1: '#A855F7',
+    wing2: '#6B21A8',
+    spot: '#F3E8FF',
+    spot2: '#D8B4FE',
+    stroke: '#4C1D95',
+  },
+]
 
 type Flyer = {
   el: HTMLElement
@@ -114,7 +152,10 @@ function placeSky() {
   sky.setAttribute('aria-hidden', 'true')
   sky.innerHTML = `
     <div class="flyer flyer--tweety">${TWEETY_SVG}</div>
-    <div class="flyer flyer--butterfly">${BUTTERFLY_SVG}</div>
+    ${BUTTERFLIES.map(
+      (palette) =>
+        `<div class="flyer flyer--butterfly flyer--butterfly-${palette.id}">${butterflySvg(palette)}</div>`,
+    ).join('')}
   `
   document.body.append(sky)
   return sky
@@ -127,7 +168,6 @@ export function startFlyers() {
 
   const sky = placeSky()
   const tweetyEl = sky.querySelector<HTMLElement>('.flyer--tweety')!
-  const butterflyEl = sky.querySelector<HTMLElement>('.flyer--butterfly')!
 
   const flyers: Flyer[] = [
     {
@@ -142,7 +182,7 @@ export function startFlyers() {
       size: 110,
     },
     {
-      el: butterflyEl,
+      el: sky.querySelector<HTMLElement>('.flyer--butterfly-blue')!,
       x: window.innerWidth * 0.72,
       y: window.innerHeight * 0.62,
       heading: 3.6,
@@ -151,6 +191,28 @@ export function startFlyers() {
       phase: 2.1,
       bob: 5,
       size: 72,
+    },
+    {
+      el: sky.querySelector<HTMLElement>('.flyer--butterfly-pink')!,
+      x: window.innerWidth * 0.18,
+      y: window.innerHeight * 0.58,
+      heading: 5.9,
+      speed: 1.9,
+      jitter: 0.14,
+      phase: 0.9,
+      bob: 6,
+      size: 64,
+    },
+    {
+      el: sky.querySelector<HTMLElement>('.flyer--butterfly-purple')!,
+      x: window.innerWidth * 0.58,
+      y: window.innerHeight * 0.16,
+      heading: 2.2,
+      speed: 2.35,
+      jitter: 0.11,
+      phase: 3.4,
+      bob: 8,
+      size: 80,
     },
   ]
 
