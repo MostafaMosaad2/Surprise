@@ -26,6 +26,17 @@ function kittyMarkup() {
   `
 }
 
+function floatHeartsMarkup() {
+  return Array.from({ length: 16 }, (_, i) => {
+    const dx = ((i % 8) - 3.5) * 22
+    const delay = (i * 0.18).toFixed(2)
+    const duration = (3.2 + (i % 5) * 0.4).toFixed(2)
+    const size = 0.75 + (i % 4) * 0.2
+    const glyph = i % 3 === 0 ? '💗' : '♥'
+    return `<span class="float-heart" style="--dx:${dx}px;--d:${delay}s;--t:${duration}s;--s:${size}">${glyph}</span>`
+  }).join('')
+}
+
 function bloomMarkup() {
   const layer = (count: number, className: string, offset: number, delay: number) =>
     Array.from({ length: count }, (_, i) => {
@@ -41,14 +52,17 @@ function bloomMarkup() {
   return `
     <div class="bloom">
       <div class="bloom-flower">
-        ${sepals}
-        ${layer(10, 'petal petal--outer', 0, 0)}
-        ${layer(8, 'petal petal--mid', 22, 0.45)}
-        ${layer(6, 'petal petal--inner', 12, 0.9)}
-        <span class="bloom-center" aria-hidden="true"></span>
+        <div class="bloom-plant">
+          ${sepals}
+          ${layer(18, 'petal petal--outer', 0, 0)}
+          ${layer(12, 'petal petal--mid', 10, 0.35)}
+          ${layer(10, 'petal petal--inner', 8, 0.7)}
+          <span class="bloom-center" aria-hidden="true"></span>
+        </div>
         <button class="heart" type="button" aria-haspopup="dialog" aria-controls="letter" aria-label="Press On The Heart" disabled>
           <span class="heart-emoji" aria-hidden="true">${EMOJI}</span>
         </button>
+        <div class="heart-flow" aria-hidden="true">${floatHeartsMarkup()}</div>
       </div>
     </div>
   `
@@ -144,11 +158,17 @@ function showSurprise() {
   }
 
   if (reduceMotion) {
-    bloom.classList.add('is-open')
+    bloom.classList.add('is-open', 'is-fading')
     revealHeart()
   } else {
-    window.setTimeout(() => bloom.classList.add('is-open'), 800)
-    window.setTimeout(revealHeart, 5200)
+    const openAfter = 800
+    const openDuration = 5200
+
+    window.setTimeout(() => bloom.classList.add('is-open'), openAfter)
+    window.setTimeout(() => {
+      bloom.classList.add('is-fading')
+      revealHeart()
+    }, openAfter + openDuration)
   }
 
   heart.addEventListener('click', () => {

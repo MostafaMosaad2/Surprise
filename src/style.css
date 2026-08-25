@@ -21,8 +21,9 @@ body {
 body {
   min-height: 100svh;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 42%, var(--glow), transparent 62%),
-    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+    linear-gradient(180deg, rgba(12, 6, 10, 0.38), rgba(18, 8, 16, 0.52)),
+    url('/background.jpg') center / cover no-repeat;
+  background-color: #120810;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -325,6 +326,16 @@ body {
   transform: scale(1);
 }
 
+.bloom-plant {
+  position: absolute;
+  inset: 0;
+  transition: opacity 1.2s ease;
+}
+
+.bloom.is-fading .bloom-plant {
+  opacity: 0;
+}
+
 .sepal,
 .petal {
   position: absolute;
@@ -349,8 +360,8 @@ body {
 }
 
 .petal {
-  border-radius: 50% 50% 42% 42%;
-  box-shadow: inset 0 -14px 18px rgba(90, 0, 30, 0.22);
+  border-radius: 50% 50% 35% 35% / 78% 78% 18% 18%;
+  box-shadow: inset 0 -10px 14px rgba(160, 90, 0, 0.28);
   transform: rotate(calc(var(--a) * 1deg)) scale(0.16);
   transition: transform 3.8s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--d);
@@ -358,26 +369,26 @@ body {
 
 .petal--outer {
   z-index: 1;
-  width: 46%;
-  height: 50%;
-  margin: -50% 0 0 -23%;
-  background: radial-gradient(circle at 50% 18%, #ff9abb, #e11d74 56%, #9f1239 100%);
+  width: 16%;
+  height: 52%;
+  margin: -52% 0 0 -8%;
+  background: radial-gradient(circle at 50% 12%, #ffe45a, #f5c518 48%, #e09b00 100%);
 }
 
 .petal--mid {
   z-index: 2;
-  width: 36%;
-  height: 40%;
-  margin: -40% 0 0 -18%;
-  background: radial-gradient(circle at 50% 22%, #ffd0e0, #fb7185 58%, #be185d 100%);
+  width: 13%;
+  height: 38%;
+  margin: -38% 0 0 -6.5%;
+  background: radial-gradient(circle at 50% 16%, #fff3a0, #ffd54a 55%, #f0b429 100%);
 }
 
 .petal--inner {
   z-index: 3;
-  width: 26%;
-  height: 30%;
-  margin: -30% 0 0 -13%;
-  background: radial-gradient(circle at 50% 28%, #fff1f5, #fda4af 62%, #f43f5e 100%);
+  width: 11%;
+  height: 24%;
+  margin: -24% 0 0 -5.5%;
+  background: radial-gradient(circle at 50% 22%, #fff8c8, #ffcc33 62%, #e6a100 100%);
 }
 
 .bloom.is-open .petal {
@@ -389,10 +400,15 @@ body {
   left: 50%;
   top: 50%;
   z-index: 4;
-  width: 16%;
-  height: 16%;
+  width: 28%;
+  height: 28%;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #ffe4ee, #e11d74 70%);
+  background:
+    radial-gradient(#2c1810 1.15px, transparent 1.2px),
+    radial-gradient(#3a2414 1.15px, transparent 1.2px),
+    radial-gradient(circle at 40% 32%, #6b4226, #3a2414 72%);
+  background-size: 7px 7px, 7px 7px, 100% 100%;
+  background-position: 0 0, 3.5px 3.5px, 0 0;
   transform: translate(-50%, -50%) scale(0.35);
   opacity: 0.4;
   transition:
@@ -412,8 +428,8 @@ body {
   z-index: 6;
   display: grid;
   place-items: center;
-  width: 46%;
-  height: 46%;
+  width: 70%;
+  height: 70%;
   padding: 0;
   border: 0;
   background: none;
@@ -431,18 +447,19 @@ body {
 
 .heart-emoji {
   display: block;
-  font-size: clamp(3.4rem, 16vw, 6.6rem);
+  font-size: clamp(5.2rem, 24vw, 10rem);
   line-height: 1;
   user-select: none;
   opacity: 0;
   transform: scale(0.2);
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  color: rgb(241, 194, 125);
+  filter: brightness(0) saturate(100%) invert(86%) sepia(28%) saturate(712%) hue-rotate(346deg) brightness(99%) contrast(92%) drop-shadow(0 10px 16px rgba(0, 0, 0, 0.35));
   transition:
-    opacity 0.8s ease 2.8s,
-    transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) 2.8s;
+    opacity 0.7s ease,
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.bloom.is-open .heart-emoji {
+.surprise.is-ready .heart-emoji {
   opacity: 1;
   transform: scale(1);
 }
@@ -457,7 +474,47 @@ body {
 
 .surprise.is-ready .heart:hover .heart-emoji,
 .surprise.is-ready .heart:focus-visible .heart-emoji {
-  filter: drop-shadow(0 0 18px rgba(255, 170, 196, 0.75));
+  filter: brightness(0) saturate(100%) invert(86%) sepia(28%) saturate(712%) hue-rotate(346deg) brightness(108%) contrast(92%);
+}
+
+.heart-flow {
+  position: absolute;
+  inset: -28% -8% 0;
+  z-index: 7;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.surprise.is-ready .heart-flow {
+  opacity: 1;
+}
+
+.float-heart {
+  position: absolute;
+  left: 50%;
+  bottom: 24%;
+  color: #ff7eb6;
+  font-size: calc(1.15rem * var(--s));
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(255, 105, 180, 0.55);
+  animation: float-heart var(--t) ease-in infinite;
+  animation-delay: var(--d);
+  opacity: 0;
+}
+
+@keyframes float-heart {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 12px) scale(0.4);
+  }
+  14% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), -230px) scale(1.2);
+  }
 }
 
 .letter {
@@ -786,11 +843,13 @@ body {
   .petal,
   .sepal,
   .bloom-flower,
+  .bloom-plant,
   .bloom-center,
   .page-title,
   .kitty,
   .kitty-photo--sleep,
-  .kitty-zzz span {
+  .kitty-zzz span,
+  .float-heart {
     animation: none;
     transition: none;
   }
